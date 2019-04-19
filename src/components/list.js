@@ -2,7 +2,10 @@ import React, {Component} from 'react'
 // import ReactPaginate from 'react-paginate';
 
 class List extends Component {
-  state = {}
+  constructor(props){
+    super(props)
+    this.state = {}
+  }
 
   componentDidMount () {
     fetch('https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json')
