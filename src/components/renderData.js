@@ -1,17 +1,12 @@
 import React from 'react'
-
+import ListItem from './listItem'
 const renderData = (props) => {
   if (props.data && props.data.length) {
     return (
       <div>
-        {
-          props.data.map(item => (
-            <div key={item.id}>
-              <p>{item.name}</p> 
-              <p>{item.age}</p>
-            </div>
-          ))
-        }
+        {props.data.map(item => (
+          <ListItem item={item} />
+        ))}
       </div>
     );
   } else {
