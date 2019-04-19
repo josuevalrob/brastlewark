@@ -10,7 +10,7 @@ class App extends Component {
           <p>
             Brastlewark
           </p>
-        <List />
+        <List url={'https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json'} perPage={10}/>
         </header>
       </div>
     );
