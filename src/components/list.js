@@ -1,78 +1,34 @@
 import React, {Component} from 'react'
-import PropTypes from 'prop-types';
-// Fck, un response de 1335 elementos!!
-// import ReactPaginate from 'react-paginate';
+import RenderData from './renderData'
+import Loading from './loading'
 
 class List extends Component {
-  static propTypes = {
-    url: PropTypes.string.isRequired,
-    perPage: PropTypes.number.isRequired,
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-      offset: 0
-    }
+  constructor(){
+    super()
+    this.state = {}
   }
 
-  componentDidMount () { // le podemos meter axios más adelante
-    this.onLoad()    
+  componentDidMount () {
+    this.onLoad()
   }
 
   onLoad = () => {
-    fetch(this.props.url)
+    fetch('https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json')
       .then(res => res.json())
-      .then(response => {
-        const data = response.Brastlewark
+      .then((data) => {
         this.setState({
-          data: data,
-          pageCount: Math.ceil(data.length / this.props.perPage),
-        });
+          data: data.Brastlewark
+        })
       })
-      .catch(err => console.error(this.props.url, err.toString())) //dejamos el error handling para más adelante    
   }
 
-  // handlePageClick = paginator => {
-  //   let selected = paginator.selected;
-  //   let offset = Math.ceil(selected * this.props.perPage);
-
-  //   this.setState({ offset: offset }, () => {
-  //     this.loadCommentsFromServer();
-  //   });
-  // };
-  
   render () {
-    const { data } = this.state;
-
-    return data.length 
-      ? this.renderData(data) 
-      : this.renderLoading()
+    const { data } = this.state
+    return data 
+      ? <RenderData data = {data} />
+      : <Loading />
   }
-
-  renderData (data) {
-    if (data.length) {
-      return (
-        <div>
-          {
-            data.map(item => (
-              <div key={item.id}>
-                <p>{item.name}</p> 
-                <p>{item.age}</p>
-              </div>
-            ))
-          }
-        </div>
-      );
-    } else {
-      return <div>No items found</div>
-    }
-  }
-
-  renderLoading () {
-    return <div>Loading...</div>
-  }
+  
 }
 
-export default List;
+export default List
