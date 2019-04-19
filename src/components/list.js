@@ -1,59 +1,34 @@
 import React, {Component} from 'react'
-// import ReactPaginate from 'react-paginate';
+import RenderData from './renderData'
+import Loading from './loading'
 
 class List extends Component {
-  constructor(props){
-    super(props)
+  constructor(){
+    super()
     this.state = {}
   }
 
   componentDidMount () {
+    this.onLoad()
+  }
+
+  onLoad = () => {
     fetch('https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json')
       .then(res => res.json())
-      .then(this.onLoad);
-  }
-
-  parseData (response) {
-    return response.Brastlewark;
-  }
-
-  onLoad = (data) => {
-    this.setState({
-      data: this.parseData(data)
-    });
+      .then((data) => {
+        this.setState({
+          data: data.Brastlewark
+        })
+      })
   }
 
   render () {
-    const { data } = this.state;
-
-    return data ?
-      this.renderData(data) :
-      this.renderLoading()
+    const { data } = this.state
+    return data 
+      ? <RenderData data = {data} />
+      : <Loading />
   }
-
-  renderData (data) {
-    console.log(data)
-    if (data && data.length) {
-      return (
-        <div>
-          {
-            data.map(item => (
-              <div key={item.id}>
-                <p>{item.name}</p> 
-                <p>{item.age}</p>
-              </div>
-            ))
-          }
-        </div>
-      );
-    } else {
-      return <div>No items found</div>
-    }
-  }
-
-  renderLoading () {
-    return <div>Loading...</div>
-  }
+  
 }
 
-export default List;
+export default List
