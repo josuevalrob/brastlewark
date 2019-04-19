@@ -3,8 +3,8 @@ import RenderData from './renderData'
 import Loading from './loading'
 
 class List extends Component {
-  constructor(){
-    super()
+  constructor(props){
+    super(props)
     this.state = {}
   }
 
@@ -13,7 +13,7 @@ class List extends Component {
   }
 
   onLoad = () => {
-    fetch('https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json')
+    fetch(this.props.url)
       .then(res => res.json())
       .then((data) => {
         this.setState({

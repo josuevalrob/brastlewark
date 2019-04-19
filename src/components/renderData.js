@@ -1,13 +1,14 @@
 import React from 'react'
+import { Card } from 'semantic-ui-react'
 import ListItem from './listItem'
 const renderData = (props) => {
   if (props.data && props.data.length) {
     return (
-      <div>
-        {props.data.map(item => (
-          <ListItem item={item} />
+      <Card.Group centered itemsPerRow={3}>
+        {props.data.map((item, i) => (
+          <ListItem item={item} key={i}/>
         ))}
-      </div>
+      </Card.Group>
     );
   } else {
     return <div>No items found</div>
