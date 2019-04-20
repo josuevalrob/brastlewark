@@ -1,45 +1,42 @@
-import _ from 'lodash'
 import React, {Component} from 'react'
-// import ListItem from './listItem'
-import { Search } from 'semantic-ui-react'
+import { Form, Input, Button } from 'semantic-ui-react'
 
 class SearchBar extends Component {
-  componentWillMount() {
-    this.resetComponent()
+  constructor(props) {
+    super(props);
+    this.state = {value: ''};
   }
-  resetComponent = () => this.setState({ isLoading: false, results: [], value: '' })
-  
-  handleResultSelect = (e, { result }) => this.setState({ value: result.title })
 
-  handleSearchChange = (e, { value }) => {
-    this.setState({ isLoading: true, value })
-
-    setTimeout(() => {
-      if (this.state.value.length < 1) 
-        return this.resetComponent()
-
-      const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
-      const isMatch = result => re.test(result.name)
-
-      this.setState({
-        isLoading: false,
-        results: _.filter(this.props.items, isMatch),
-      })
-    }, 300)
+  handleChange = (event) => {
+    this.setState({value: event.target.value});
   }
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const { onSubmit } = this.props;
+    onSubmit(this.state.value);
+  }
+
   render() {
-    const { isLoading, value, results } = this.state
-
     return (
-      <Search
-        loading={isLoading}
-        onResultSelect={this.handleResultSelect}
-        onSearchChange={_.debounce(this.handleSearchChange, 500, { leading: true })}
-        results={results}
-        value={value}
-        {...this.props}
-      />
-    )
+      <Form onSubmit={this.handleSubmit}>
+        <Form.Group widths='equal'>
+          <Form.Field
+          id='form-input-control-first-name'
+          control={Input}
+          value={this.state.value} onChange={this.handleChange} 
+          label='First name'
+          placeholder='First name'
+          />
+        <Form.Field
+          id='form-button-control-public'
+          control={Button}
+          content='Confirm'
+          type="submit"
+          />
+        </Form.Group>
+      </Form>
+    );
   }
 }
 
