@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types';
 import RenderData from './renderData'
 import Loading from './loading'
 
@@ -30,5 +31,7 @@ class List extends Component {
   }
   
 }
-
+List.defaultProps = {
+  url: 'https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json'
+};
 export default List
