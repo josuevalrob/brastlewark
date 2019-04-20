@@ -8,9 +8,9 @@ import LazyLoad from 'react-lazyload';
 const ListItem = (props) => {
   const description = `${props.item.name} is a Gnmo with a height of ${props.item.height} and a weight of ${props.item.wieght}.`
   return (  
-    <Card key={props.item.id}>
+    <Card key={props.item.id} fluid>
       <LazyLoad height={350} once placeholder={<Loading />}>
-          <Image src={props.item.thumbnail} size='medium' rounded centered fluid />
+          <Image src={props.item.thumbnail} rounded centered fluid />
           {/* <img src={props.item.thumbnail} alt = ''/> */}
       </LazyLoad>
       <Card.Content header={props.item.name} />

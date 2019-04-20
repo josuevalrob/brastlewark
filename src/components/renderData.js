@@ -1,18 +1,25 @@
 import React from 'react'
-import { Card } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
+// import SearchBar from './searchBar'
 import ListItem from './listItem'
+
 const renderData = (props) => {
   if (props.data && props.data.length) {
     return (
-      <Card.Group centered itemsPerRow={3}>
-        {props.data.map((item, i) => (
-          <ListItem item={item} key={i}/>
-        ))}
-      </Card.Group>
+      <Grid>
+        {/* <Grid.Row columns={3}> */}
+          {props.data.map((item, i) => (
+            <Grid.Column key={i} mobile={16} tablet={8} computer={4}>
+              <ListItem item={item} />
+            </Grid.Column>
+          ))}
+        {/* </Grid.Row> */}
+      </Grid>
     );
   } else {
     return <div>No items found</div>
   }
 }
+
 
 export default renderData
