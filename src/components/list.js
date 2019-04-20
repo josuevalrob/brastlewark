@@ -21,6 +21,8 @@ class List extends Component {
           data: data.Brastlewark
         })
       })
+      .catch(err=>console.error(`Ups, we have a problem, check it: ${err}`))
+    return true
   }
 
   render () {
