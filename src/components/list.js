@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import RenderData from './renderData'
 import Loading from './loading'
 
@@ -22,7 +22,6 @@ class List extends Component {
         })
       })
       .catch(err=>console.error(`Ups, we have a problem, check it: ${err}`))
-    return true
   }
 
   render () {

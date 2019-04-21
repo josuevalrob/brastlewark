@@ -3,66 +3,120 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Available Scripts
 
 In the project directory, you can run:
+- npm start <br>
+  start a project in development mode.
+- npm test <br>
+  Some test with jest in the console. 
 
-### `npm start`
+## What is going on?
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Basically this is an app that load a 1335 objects in an array.<br>
+Check it [here](https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json). <br>
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+And the main goal is to show them and load the 1335 images profile... and don't broke the browser. <br>
 
-### `npm test`
+Also, it require a filter, avoiding to explote the browser... or the world... <br>
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## How am I doint this?.
 
-### `npm run build`
+Okey, the problem here, is that I can not control the backend. So, I can't send a pagination parameter <br>
+(or at least I don't know how). I tried to create a pagination, something like asking the 1335 objects and just <br>
+rendering by 10 to 10, cutting the array, setting a state of the offset or the current page, some crazy shit. <br>
+at the end, it gets more and more complex. So, I leave that attempt in another branch.<br>
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Getting the data: 
+I have a `<List />` class component with an `onLoad()`method: <br>
+```javascript
+onLoad = () => {
+    fetch(this.props.url)
+      .then(res => res.json())
+      .then((data) => {
+        this.setState({
+          data: data.Brastlewark
+        })
+      })
+      .catch(err=>console.error(`Ups, we have a problem, check it: ${err}`))
+  }
+```
+I'm not using axios, cus it is a very simple request, without headers or stranger things. 
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+### Show or not to show. 
+Inside the `<List>` class component, the render method call the `<RenderData>` or the `<Loading/>`component. Depending if the data, which is an state, change. 
+```javascript
+  render () {
+    const { data } = this.state
+    return data 
+      ? <RenderData data = {data} />
+      : <Loading />
+  }
+```
+I'm gonna call the `<Loading />` component in more places. 
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### How do I print the data?
+The `<RenderData>` receive the data from the api, and pass it to the state. The State is gonna be modify by the <br>
+`<SearchBar` component with the `onFormSubmit()` method. Once the `state.data` is modify, the `render()`method is <br>
+called one more time, and show just the filtered elements. <br>
+```javascript
+  onFormSubmit = (value) => {
+    if(!value){
+      this.setState({
+        data: this.props.data //I reset the data with all the values. 
+      })
+    } else {
+      const {data} = this.state
+      this.setState({data: data.filter( e => e.name.includes(value))})
+    }
+  }
+```
+And for printing it, I am using *[Semantic UI]*(https://react.semantic-ui.com/)
+```javascript
+render(){
+    if (this.state.data && this.state.data.length) {
+      return (
+        <React.Fragment>
+          <Divider />
+          <SearchBar onSubmit={this.onFormSubmit}/>
+          <Divider />
+          <Grid>
+            {this.state.data.map((item, i) => (
+              <Grid.Column key={i} mobile={16} tablet={8} computer={4}>
+                <ListItem item={item} />
+              </Grid.Column>
+            ))}
+          </Grid>
+        </React.Fragment>
+      );
+    } else {
+      return <div>No items found</div>
+    }
+  }
+```
+Until now, I am not facing the main problem of loading 1335 images at once, read the next section. 
 
-### `npm run eject`
+### How do I print 1335 images?
+```
+npm install --save react-lazyload
+```
+With `LazyLoad` I was able to render images, or even ask them to the server, just if the user is actually looking at them. I also include a loader, which is the same loader component from the entire page. 
+```javascript
+  <LazyLoad height={350} once placeholder={<Loading />}>
+      <Image src={props.item.thumbnail} rounded centered fluid />
+  </LazyLoad>
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## What can I improve? 
+I haven´t touched the css, (I prefer scss), or the responsive, I hope that semantic cover that in a simple way. I have also a problem with the loading of the images, maybe with some css I could fix that. 
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+There are not tests. Well, I made some of them, but for being honest, I haven´t tested a react app. So what I did was just 
+<br> read the documentation of Jest, and try the basic, like check If the header is printed. I felt very frustrated with 
+<br> testing the `event prevent default`. or the `onLoad()`method from the list component. <br>
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+I wish to try some mockup's tests. Maybe for the next time. <br>
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Also, the performance. I don't know why React  gets to slow trying to render the 1335 empty element, without images. But, researching, it is basically a bad practice to do that, so, maybe with more control in the backend, I could develop a paginator or an infinite scroll, but for both I need control in the backend. 
 
-## Learn More
+## Licence
+MIT
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
